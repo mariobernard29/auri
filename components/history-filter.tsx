@@ -11,7 +11,8 @@ export function HistoryFilter() {
   const currentPeriod = searchParams.get('period') || 'all'
   const currentDate = searchParams.get('date') || ''
 
-  const handlePeriodChange = (newPeriod: string) => {
+  const handlePeriodChange = (newPeriod: string | null) => {
+    if (!newPeriod) return;
     if (newPeriod === 'all') {
       router.push('/dashboard/history')
     } else {
