@@ -2,6 +2,7 @@
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend, AreaChart, Area, XAxis, YAxis, CartesianGrid } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { formatCurrency } from "@/lib/utils"
 
 const EXPENSE_COLORS = ['#5B4BFF', '#22C55E', '#3B82F6', '#EF4444', '#7B8594', '#8B5CF6']
 const INCOME_COLORS = ['#22C55E', '#5B4BFF', '#14B8A6', '#8B5CF6', '#3B82F6', '#0F111A']
@@ -22,7 +23,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
                 {entry.name}:
               </span>
               <span className="text-sm font-bold text-foreground">
-                ${Number(entry.value).toFixed(2)}
+                {formatCurrency(Number(entry.value))}
               </span>
             </div>
           ))}
@@ -81,7 +82,7 @@ export function AnalyticsDashboard({
                     axisLine={false} 
                     tickLine={false} 
                     tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} 
-                    tickFormatter={(value) => `$${value}`}
+                    tickFormatter={(value) => formatCurrency(value)}
                   />
                   <RechartsTooltip content={<CustomTooltip />} />
                   <Legend wrapperStyle={{ paddingTop: '20px' }} />

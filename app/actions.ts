@@ -394,3 +394,26 @@ export async function deleteSubscription(formData: FormData) {
   redirect("/dashboard/subscriptions")
 }
 
+export async function updateUserProfile(formData: FormData) {
+  const session = await getServerSession(authOptions)
+  const userId = session?.user?.id
+  if (!userId) throw new Error("No autenticado")
+
+  const name = formData.get("name") as string
+  const email = formData.get("email") as string
+  const image = formData.get("image") as string | null
+
+  const dataToUpdate: any = { name, email }
+  if (image) {
+    dataToUpdate.image = image
+  }
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: dataToUpdate
+  })
+
+  revalidatePath("/dashboard/settings")
+  revalidatePath("/dashboard")
+}
+

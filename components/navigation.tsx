@@ -3,7 +3,6 @@
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { useSession } from "next-auth/react"
 import { Home, PieChart, PlusCircle, CreditCard, Settings, List, PlaySquare, MoreHorizontal } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -26,10 +25,8 @@ const mobileNavItems = [
 
 const mainAction = { name: "Agregar", href: "/dashboard/add", icon: PlusCircle }
 
-export function Navigation() {
+export function Navigation({ user }: { user?: { name: string | null, email: string | null, image: string | null } | null }) {
   const pathname = usePathname()
-  const { data: session } = useSession()
-  const user = session?.user
   const initial = user?.name ? user.name.charAt(0).toUpperCase() : "U"
 
   return (
@@ -100,8 +97,12 @@ export function Navigation() {
         {user && (
           <div className="p-4 border-t">
             <div className="flex items-center gap-3 rounded-xl p-2 hover:bg-muted/50 transition-colors cursor-default">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-semibold">
-                {initial}
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-semibold overflow-hidden border">
+                {user.image ? (
+                  <Image src={user.image} alt={user.name || "User"} width={40} height={40} className="object-cover w-full h-full" />
+                ) : (
+                  initial
+                )}
               </div>
               <div className="flex flex-col overflow-hidden">
                 <span className="truncate text-sm font-medium">{user.name}</span>

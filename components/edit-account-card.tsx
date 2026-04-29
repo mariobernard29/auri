@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { updateAccount, deleteAccount } from "@/app/actions"
+import { formatCurrency } from "@/lib/utils"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -25,6 +26,7 @@ const getIcon = (type: string) => {
 
 export function EditAccountCard({ account }: { account: Account }) {
   const [isEditing, setIsEditing] = useState(false)
+  const [type, setType] = useState(account.type)
 
   if (isEditing) {
     return (
@@ -44,9 +46,11 @@ export function EditAccountCard({ account }: { account: Account }) {
             </div>
             <div className="space-y-2">
               <Label htmlFor={`type-${account.id}`}>Tipo</Label>
-              <Select name="type" defaultValue={account.type} required>
+              <Select name="type" value={type} onValueChange={setType} required>
                 <SelectTrigger className="w-full bg-background">
-                   <SelectValue placeholder="Tipo de cuenta" />
+                   <SelectValue placeholder="Tipo de cuenta">
+                     {type === 'cash' ? 'Efectivo' : type === 'bank' ? 'Banco' : type === 'credit' ? 'Crédito' : 'Tipo de cuenta'}
+                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                    <SelectItem value="cash">Efectivo</SelectItem>
@@ -101,7 +105,7 @@ export function EditAccountCard({ account }: { account: Account }) {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">${account.balance.toFixed(2)}</div>
+        <div className="text-2xl font-bold">{formatCurrency(account.balance)}</div>
         <p className="text-sm text-muted-foreground mt-1 capitalize">
           {account.type === 'cash' ? 'Efectivo' : account.type === 'credit' ? 'Crédito' : 'Banco'}
         </p>

@@ -53,13 +53,25 @@ export const authOptions: NextAuthOptions = {
         },
       }
     },
-    jwt: ({ token, user }) => {
+    jwt: async ({ token, user, trigger, session }) => {
+      // NEVER store Base64 images in JWT cookies to prevent HTTP 431 errors
+      if (trigger === "update" && session) {
+        token.name = session.name || token.name
+        token.email = session.email || token.email
+      }
       if (user) {
         return {
           ...token,
           id: user.id,
+          picture: null, // explicitly remove any existing picture from the token
         }
       }
+      
+      // Also scrub picture if it exists in ongoing tokens
+      if (token.picture) {
+        token.picture = null
+      }
+      
       return token
     },
   },

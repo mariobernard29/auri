@@ -3,6 +3,7 @@ import { authOptions } from "@/lib/authOptions"
 import { prisma } from "@/lib/prisma"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowDownIcon, ArrowUpIcon, Wallet } from "lucide-react"
+import { formatCurrency } from "@/lib/utils"
 import { TransactionItem } from "@/components/transaction-item"
 
 export default async function DashboardPage() {
@@ -60,7 +61,7 @@ export default async function DashboardPage() {
             <Wallet className="h-4 w-4 text-white/80" />
           </CardHeader>
           <CardContent className="relative z-10">
-            <div className="text-4xl font-bold tracking-tight">${totalBalance.toFixed(2)}</div>
+            <div className="text-4xl font-bold tracking-tight">{formatCurrency(totalBalance)}</div>
             <p className="text-xs text-white/70 mt-2 font-medium">
               Distribuido en {accounts.length} {accounts.length === 1 ? 'cuenta' : 'cuentas'}
             </p>
@@ -74,7 +75,7 @@ export default async function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground">${ingresos.toFixed(2)}</div>
+            <div className="text-2xl font-bold text-foreground">{formatCurrency(ingresos)}</div>
             <p className="text-xs text-emerald-500 font-medium mt-1">+ Positivo</p>
           </CardContent>
         </Card>
@@ -86,7 +87,7 @@ export default async function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground">${gastos.toFixed(2)}</div>
+            <div className="text-2xl font-bold text-foreground">{formatCurrency(gastos)}</div>
             <p className="text-xs text-muted-foreground font-medium mt-1">Controla tus gastos</p>
           </CardContent>
         </Card>

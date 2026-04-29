@@ -13,6 +13,14 @@ type Category = { id: string; name: string }
 export function AddTransactionClient({ accounts, categories, subscriptions = [] }: { accounts: Account[], categories: Category[], subscriptions?: any[] }) {
   const [tab, setTab] = useState<'movement' | 'transfer'>('movement')
   
+  const [type, setType] = useState('expense')
+  const [accountId, setAccountId] = useState<string>(accounts[0]?.id || '')
+  const [categoryId, setCategoryId] = useState<string>(categories[0]?.id || '')
+  const [subscriptionId, setSubscriptionId] = useState<string>('none')
+  
+  const [sourceId, setSourceId] = useState<string>(accounts[0]?.id || '')
+  const [targetId, setTargetId] = useState<string>(accounts.length > 1 ? accounts[1]?.id : accounts[0]?.id || '')
+  
   if (accounts.length === 0) {
     return <div className="p-4 text-center text-muted-foreground">Debes crear al menos una cuenta primero.</div>
   }
@@ -40,9 +48,11 @@ export function AddTransactionClient({ accounts, categories, subscriptions = [] 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="type">Tipo</Label>
-              <Select name="type" defaultValue="expense">
+              <Select name="type" value={type} onValueChange={setType}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Tipo" />
+                  <SelectValue placeholder="Tipo">
+                    {type === 'income' ? 'Ingreso' : 'Gasto'}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="expense">Gasto</SelectItem>
@@ -68,9 +78,11 @@ export function AddTransactionClient({ accounts, categories, subscriptions = [] 
             </div>
             <div className="space-y-2">
               <Label htmlFor="accountId">Cuenta</Label>
-              <Select name="accountId" defaultValue={accounts[0]?.id} required>
+              <Select name="accountId" value={accountId} onValueChange={setAccountId} required>
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecciona cuenta" />
+                  <SelectValue placeholder="Selecciona cuenta">
+                    {accounts.find(a => a.id === accountId)?.name || "Selecciona cuenta"}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {accounts.map(a => (
@@ -84,9 +96,11 @@ export function AddTransactionClient({ accounts, categories, subscriptions = [] 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="categoryId">Categoría</Label>
-              <Select name="categoryId" defaultValue={categories[0]?.id} required>
+              <Select name="categoryId" value={categoryId} onValueChange={setCategoryId} required>
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecciona categoría" />
+                  <SelectValue placeholder="Selecciona categoría">
+                    {categories.find(c => c.id === categoryId)?.name || "Selecciona categoría"}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map(c => (
@@ -98,9 +112,11 @@ export function AddTransactionClient({ accounts, categories, subscriptions = [] 
             
             <div className="space-y-2">
               <Label htmlFor="subscriptionId">Suscripción (Opcional)</Label>
-              <Select name="subscriptionId" defaultValue="">
+              <Select name="subscriptionId" value={subscriptionId} onValueChange={setSubscriptionId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Ninguna" />
+                  <SelectValue placeholder="Ninguna">
+                    {subscriptionId === 'none' || !subscriptionId ? 'Ninguna' : subscriptions?.find(s => s.id === subscriptionId)?.name || "Ninguna"}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="none">Ninguna</SelectItem>
@@ -127,9 +143,11 @@ export function AddTransactionClient({ accounts, categories, subscriptions = [] 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="sourceId">Cuenta Origen (Se resta) 📤</Label>
-              <Select name="sourceId" defaultValue={accounts[0]?.id} required>
+              <Select name="sourceId" value={sourceId} onValueChange={setSourceId} required>
                 <SelectTrigger className="bg-rose-500/10 text-rose-600 font-medium">
-                  <SelectValue placeholder="Cuenta origen" />
+                  <SelectValue placeholder="Cuenta origen">
+                    {accounts.find(a => a.id === sourceId)?.name || "Cuenta origen"}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {accounts.map(a => (
@@ -141,9 +159,11 @@ export function AddTransactionClient({ accounts, categories, subscriptions = [] 
             
             <div className="space-y-2">
               <Label htmlFor="targetId">Cuenta Destino (Se abona) 📥</Label>
-              <Select name="targetId" defaultValue={accounts.length > 1 ? accounts[1]?.id : accounts[0]?.id} required>
+              <Select name="targetId" value={targetId} onValueChange={setTargetId} required>
                 <SelectTrigger className="bg-emerald-500/10 text-emerald-600 font-medium">
-                  <SelectValue placeholder="Cuenta destino" />
+                  <SelectValue placeholder="Cuenta destino">
+                    {accounts.find(a => a.id === targetId)?.name || "Cuenta destino"}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {accounts.map(a => (

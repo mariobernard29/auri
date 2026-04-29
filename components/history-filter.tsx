@@ -44,7 +44,9 @@ export function HistoryFilter() {
           onValueChange={handlePeriodChange}
         >
           <SelectTrigger className="w-full bg-background">
-            <SelectValue placeholder="Periodo" />
+            <SelectValue placeholder="Periodo">
+              {(currentDate ? 'specific' : currentPeriod) === 'all' ? 'Todo el tiempo' : (currentDate ? 'specific' : currentPeriod) === 'day' ? 'Hoy' : (currentDate ? 'specific' : currentPeriod) === 'week' ? 'Esta Semana' : (currentDate ? 'specific' : currentPeriod) === 'month' ? 'Este Mes' : (currentDate ? 'specific' : currentPeriod) === 'specific' ? 'Día Específico' : 'Periodo'}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todo el tiempo</SelectItem>

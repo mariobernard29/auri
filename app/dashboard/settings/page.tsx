@@ -10,12 +10,15 @@ import { Edit2, Trash2 } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { AccountSettings } from "@/components/settings-client"
 
+import { ProfileSettings } from "@/components/profile-settings"
+
 export default async function SettingsPage() {
   const session = await getServerSession(authOptions)
   const userId = session?.user?.id
 
   if (!userId) return null
 
+  const user = await prisma.user.findUnique({ where: { id: userId } })
   const categories = await prisma.category.findMany({
     where: { userId },
     orderBy: { createdAt: 'desc' }
@@ -24,6 +27,8 @@ export default async function SettingsPage() {
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
       <h1 className="text-3xl font-bold tracking-tight">Ajustes ⚙️</h1>
+      
+      <ProfileSettings user={user} />
       
       <Card className="shadow-md">
         <CardHeader>

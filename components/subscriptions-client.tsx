@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import Image from "next/image"
+import { formatCurrency } from "@/lib/utils"
 
 const PREDEFINED = [
   { name: 'Adobe', logo: '/logos_subs/adobe.png', cat: 'Productividad' },
@@ -47,6 +48,12 @@ export function SubscriptionsClient({ subscriptions, accounts }: { subscriptions
   const [customEmoji, setCustomEmoji] = useState('🍿')
   const [customName, setCustomName] = useState('')
   const [customCategory, setCustomCategory] = useState('Películas/TV')
+  
+  const [billingDayPredef, setBillingDayPredef] = useState('1')
+  const [accountIdPredef, setAccountIdPredef] = useState(accounts[0]?.id || '')
+  
+  const [billingDayCustom, setBillingDayCustom] = useState('1')
+  const [accountIdCustom, setAccountIdCustom] = useState(accounts[0]?.id || '')
 
   return (
     <div className="space-y-6">
@@ -96,9 +103,11 @@ export function SubscriptionsClient({ subscriptions, accounts }: { subscriptions
                       </div>
                       <div className="space-y-2">
                         <Label>Día de cobro</Label>
-                        <Select name="billingDay" defaultValue="1" required>
+                        <Select name="billingDay" value={billingDayPredef} onValueChange={setBillingDayPredef} required>
                           <SelectTrigger className="bg-background">
-                            <SelectValue placeholder="Día" />
+                            <SelectValue placeholder="Día">
+                              {billingDayPredef || "Día"}
+                            </SelectValue>
                           </SelectTrigger>
                           <SelectContent>
                             {Array.from({ length: 31 }, (_, i) => (
@@ -109,9 +118,11 @@ export function SubscriptionsClient({ subscriptions, accounts }: { subscriptions
                       </div>
                       <div className="space-y-2">
                         <Label>Cuenta a debitar</Label>
-                        <Select name="accountId" defaultValue={accounts[0]?.id} required>
+                        <Select name="accountId" value={accountIdPredef} onValueChange={setAccountIdPredef} required>
                           <SelectTrigger className="bg-background">
-                            <SelectValue placeholder="Selecciona cuenta" />
+                            <SelectValue placeholder="Selecciona cuenta">
+                              {accounts.find(a => a.id === accountIdPredef)?.name || "Selecciona cuenta"}
+                            </SelectValue>
                           </SelectTrigger>
                           <SelectContent>
                             {accounts.map(a => (
@@ -134,13 +145,16 @@ export function SubscriptionsClient({ subscriptions, accounts }: { subscriptions
                   <div className="space-y-2">
                     <Label>Categoría / Icono</Label>
                     <Select 
+                      value={customCategory}
                       onValueChange={(val) => {
                         const sel = EMOJI_CATEGORIES.find(c => c.name === val)
                         if (sel) { setCustomEmoji(sel.emoji); setCustomCategory(sel.name) }
                       }}
                     >
                       <SelectTrigger>
-                         <SelectValue placeholder="Selecciona categoría" />
+                         <SelectValue placeholder="Selecciona categoría">
+                           {EMOJI_CATEGORIES.find(c => c.name === customCategory) ? `${EMOJI_CATEGORIES.find(c => c.name === customCategory)?.emoji} ${customCategory}` : "Selecciona categoría"}
+                         </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
                         {EMOJI_CATEGORIES.map(c => (
@@ -159,9 +173,11 @@ export function SubscriptionsClient({ subscriptions, accounts }: { subscriptions
                   </div>
                   <div className="space-y-2">
                     <Label>Día de cobro</Label>
-                    <Select name="billingDay" defaultValue="1" required>
+                    <Select name="billingDay" value={billingDayCustom} onValueChange={setBillingDayCustom} required>
                       <SelectTrigger>
-                        <SelectValue placeholder="Día" />
+                        <SelectValue placeholder="Día">
+                          {billingDayCustom || "Día"}
+                        </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
                         {Array.from({ length: 31 }, (_, i) => (
@@ -172,9 +188,11 @@ export function SubscriptionsClient({ subscriptions, accounts }: { subscriptions
                   </div>
                   <div className="space-y-2">
                     <Label>Cuenta a debitar</Label>
-                    <Select name="accountId" defaultValue={accounts[0]?.id} required>
+                    <Select name="accountId" value={accountIdCustom} onValueChange={setAccountIdCustom} required>
                       <SelectTrigger>
-                        <SelectValue placeholder="Selecciona cuenta" />
+                        <SelectValue placeholder="Selecciona cuenta">
+                          {accounts.find(a => a.id === accountIdCustom)?.name || "Selecciona cuenta"}
+                        </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
                         {accounts.map(a => (
@@ -224,7 +242,7 @@ export function SubscriptionsClient({ subscriptions, accounts }: { subscriptions
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-xl font-bold">${sub.price.toFixed(2)}</p>
+                <p className="text-xl font-bold">{formatCurrency(sub.price)}</p>
                 <p className="text-[10px] text-muted-foreground uppercase tracking-wider">/ mes</p>
               </div>
             </CardContent>

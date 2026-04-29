@@ -6,6 +6,7 @@ import { ArrowDownIcon, ArrowUpIcon, Edit2, Trash2, X, Check } from "lucide-reac
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
+import { formatCurrency } from "@/lib/utils"
 
 export function TransactionItem({ t }: { t: any }) {
   const [isEditing, setIsEditing] = useState(false)
@@ -68,7 +69,7 @@ export function TransactionItem({ t }: { t: any }) {
       <div className="flex items-center gap-4">
         <div className="text-right">
           <div className={`font-medium ${t.type === 'income' ? 'text-emerald-500' : 'text-foreground'}`}>
-            {t.type === 'income' ? '+' : '-'}${t.amount.toFixed(2)}
+            {t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount)}
           </div>
           <p className="text-[10px] text-muted-foreground capitalize mt-0.5">{t.account?.name}</p>
         </div>
