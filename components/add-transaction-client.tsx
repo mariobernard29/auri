@@ -48,7 +48,7 @@ export function AddTransactionClient({ accounts, categories, subscriptions = [] 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="type">Tipo</Label>
-              <Select name="type" value={type} onValueChange={setType}>
+              <Select name="type" value={type} onValueChange={(value) => value && setType(value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Tipo">
                     {type === 'income' ? 'Ingreso' : 'Gasto'}
@@ -78,7 +78,7 @@ export function AddTransactionClient({ accounts, categories, subscriptions = [] 
             </div>
             <div className="space-y-2">
               <Label htmlFor="accountId">Cuenta</Label>
-              <Select name="accountId" value={accountId} onValueChange={setAccountId} required>
+              <Select name="accountId" value={accountId} onValueChange={(value) => value && setAccountId(value)} required>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecciona cuenta">
                     {accounts.find(a => a.id === accountId)?.name || "Selecciona cuenta"}
